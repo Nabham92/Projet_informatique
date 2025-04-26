@@ -1,0 +1,4 @@
+db/data/ratings.csv
+db/data/ratings_small.csv
+db\data\movies.duckdb
+config.py
