@@ -1,4 +1,7 @@
 db/data/ratings.csv
 db/data/ratings_small.csv
-db\data\movies.duckdb
+db/data/movies.duckdb
 config.py
+git-filter-repo.txt
+C:\Users\mhama\OneDrive\Documents\Projet_final\db\data\movies.duckdb
+movies.duckdb
