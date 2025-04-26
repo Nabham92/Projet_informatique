@@ -5,3 +5,21 @@ config.py
 git-filter-repo.txt
 C:\Users\mhama\OneDrive\Documents\Projet_final\db\data\movies.duckdb
 movies.duckdb
+
+
+# Ne pas versionner les environnements virtuels
+venv/
+
+# Ne pas versionner les bases de données DuckDB
+*.duckdb
+
+# Ne pas versionner les fichiers compilés
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ne pas versionner les dépendances téléchargées
+*.egg-info/
+dist/
+build/
