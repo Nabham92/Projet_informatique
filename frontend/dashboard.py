@@ -8,8 +8,15 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from config import BACKEND_URL, TMDB_MOVIE_URL_TEMPLATE, TMDB_IMAGE_URL, LINKS_CSV_PATH
 
+import streamlit as st
+import pandas as pd
+import joblib
+import requests
+import os
+import sys
+
 # --------------------
-# CHARGER MAPPING movieId -> tmdbId
+# FONCTIONS UTILES
 # --------------------
 @st.cache_data
 def load_links():
@@ -18,17 +25,10 @@ def load_links():
     links["tmdbId"] = links["tmdbId"].astype(int)
     return dict(zip(links["movieId"], links["tmdbId"]))
 
-# Charger les users valides
 @st.cache_data
 def load_valid_users():
     return joblib.load("db/data/valid_users.pkl")
 
-links_mapping = load_links()
-valid_users = load_valid_users()
-
-# --------------------
-# FONCTIONS UTILES
-# --------------------
 def get_recommendations(user_id, k=5):
     url = f"{BACKEND_URL}/recommendations/{user_id}?k={k}"
     response = requests.post(url)
@@ -52,7 +52,13 @@ def rescale_rating(rating_predicted):
     return round(clipped, 1)
 
 # --------------------
-# INTERFACE UTILISATEUR
+# CHARGEMENT DES DONNÉES
+# --------------------
+links_mapping = load_links()
+valid_users = load_valid_users()
+
+# --------------------
+# INTERFACE STREAMLIT
 # --------------------
 st.title("🎬 Système de Recommandation de Films")
 
@@ -69,7 +75,7 @@ if st.button("Obtenir mes recommandations"):
 
         if recommendations:
             st.success(f"Top {k} recommandations pour l'utilisateur {user_id}")
-            cols = st.columns(2)  # 2 colonnes pour l'affichage
+            cols = st.columns(3)  # 3 cartes par ligne
 
             for idx, rec in enumerate(recommendations):
                 movie_id = rec["film_id"]
@@ -85,18 +91,24 @@ if st.button("Obtenir mes recommandations"):
                         title = movie.get("title", "Titre non disponible")
                         overview = movie.get("overview", "Pas de synopsis.")
                         poster_path = movie.get("poster_path", None)
+                        tmdb_rating = movie.get("vote_average", None)
+
                         rescaled_rating = rescale_rating(predicted_rating)
 
-                        with cols[idx % 2]:  # Alternance des colonnes
-                            st.subheader(f"{title}")
-                            if poster_path:
-                                st.image(f"{TMDB_IMAGE_URL}{poster_path}", width=250)
-                            else:
-                                st.text("(Pas d'image disponible)")
+                        with cols[idx % 3]:  # 3 colonnes, modulo pour alterner
+                            with st.container():
+                                if poster_path:
+                                    st.image(f"{TMDB_IMAGE_URL}{poster_path}", width=200)
+                                else:
+                                    st.text("(Pas d'image disponible)")
 
-                            st.write(f"⭐ Note prédite : {rescaled_rating}/10")
-                            with st.expander("Voir synopsis"):
-                                st.write(overview)
+                                st.markdown(f"### {title}")
+                                st.markdown(f"⭐ **Note prédite** : {rescaled_rating}/10")
+                                
+                                if tmdb_rating:
+                                    st.markdown(f"🎯 **Note TMDB** : {tmdb_rating}/10")
+
+                                st.caption(overview[:150] + "...")  # Petit extrait de synopsis
                     else:
                         st.warning(f"Détails introuvables pour TMDB ID {tmdb_id}")
                 else:
