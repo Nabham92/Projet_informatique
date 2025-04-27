@@ -1,25 +1,38 @@
+# Ignore base de données DuckDB
+*.duckdb
+db/data/movies.duckdb
+
+# Ignore CSV de données brutes
 db/data/ratings.csv
 db/data/ratings_small.csv
-db/data/movies.duckdb
+
+# Ignore fichiers de modèles
+models/pivot_table.pkl
+models/svd_model.pkl
+
+# Ignore fichiers sensibles
 config.py
+
+# Ignore fichiers de git-filter-repo
 git-filter-repo.txt
-C:\Users\mhama\OneDrive\Documents\Projet_final\db\data\movies.duckdb
-movies.duckdb
 
-
-# Ne pas versionner les environnements virtuels
+# Ignore environnements virtuels
 venv/
+.venv/
 
-# Ne pas versionner les bases de données DuckDB
-*.duckdb
-
-# Ne pas versionner les fichiers compilés
+# Ignore fichiers Python compilés
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Ne pas versionner les dépendances téléchargées
-*.egg-info/
+# Ignore dossiers de build/déploiement
 dist/
 build/
+*.egg-info/
+
+# Ignore dossiers spécifiques au projet
+backend/notebooks/
+
+# Ignore modèles et pivot
+models/*.pkl
