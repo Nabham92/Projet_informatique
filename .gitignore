@@ -5,6 +5,8 @@ db/data/movies.duckdb
 # Ignore CSV de données brutes
 db/data/ratings.csv
 db/data/ratings_small.csv
+db\data\movies_metadata.csv
+db\data\links.csv
 
 # Ignore fichiers de modèles
 models/pivot_table.pkl

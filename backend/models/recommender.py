@@ -3,6 +3,7 @@ import os
 import joblib
 import pandas as pd
 import duckdb
+import numpy as np 
 
 # Monter jusqu'à la racine
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -41,6 +42,8 @@ def get_movie_titles(film_ids):
     results = conn.execute(query).fetchall()
     return {row[0]: row[1] for row in results}
 
+import numpy as np
+
 def get_recommendations(user_id: int, k: int = 10):
     pivot_filled = pivot.fillna(0)
 
@@ -50,6 +53,9 @@ def get_recommendations(user_id: int, k: int = 10):
     user_vector = pivot_filled.loc[user_id].values.reshape(1, -1)
     user_reduced = svd_model.transform(user_vector)
     reconstructed_ratings = user_reduced.dot(svd_model.components_).flatten()
+
+    # Clip entre 0 et 5 pour rester cohérent avec les notations Kaggle
+    reconstructed_ratings = np.clip(reconstructed_ratings, 0, 5)
 
     predictions = pd.DataFrame({
         "film_id": pivot.columns,
