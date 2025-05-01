@@ -42,3 +42,4 @@ start_app.bat
 
 data
 db\data
+__pycache__
