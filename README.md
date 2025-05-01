@@ -73,7 +73,7 @@ Vous pouvez baisser ces valeurs pour élargir les recommandations.
 
 ---
 
-## 🧪 Fonctionnalités en détail
+##  Fonctionnalités en détail
 
 ### Backend (FastAPI)
 
@@ -93,7 +93,7 @@ Vous pouvez baisser ces valeurs pour élargir les recommandations.
 
 ---
 
-## 📁 Structure simplifiée du projet
+## Structure simplifiée du projet
 
 ```bash
 .
