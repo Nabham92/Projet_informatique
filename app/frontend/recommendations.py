@@ -41,7 +41,7 @@ def get_recommendations(user_id, k=5):
         with st.sidebar.expander("🔧 Informations de débogage", expanded=False):
             st.write(f"Tentative de connexion à: {url} (POST)")
         
-        response = requests.post(url, params={"k": k}, timeout=30)
+        response = requests.post(url, params={"k": k}, timeout=60)
         
         with st.sidebar.expander("🔧 Informations de débogage", expanded=False):
             st.write(f"Statut de la réponse: {response.status_code}")
