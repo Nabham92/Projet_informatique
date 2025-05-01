@@ -11,9 +11,7 @@ db\data\links.csv
 # Ignore fichiers de modèles
 models/pivot_table.pkl
 models/svd_model.pkl
-
-# Ignore fichiers sensibles
-config.py
+*.pkl
 
 # Ignore fichiers de git-filter-repo
 git-filter-repo.txt
@@ -38,3 +36,9 @@ backend/notebooks/
 
 # Ignore modèles et pivot
 models/*.pkl
+
+build_and_push_images.sh
+start_app.bat
+
+data
+db\data

@@ -7,3 +7,6 @@ matplotlib
 seaborn
 fastapi
 uvicorn
+python-dotenv
+streamlit
+plotly

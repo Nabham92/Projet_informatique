@@ -1,0 +1,18 @@
+# Fichiers inutiles dans les images Docker
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.pkl
+*.zip
+*.ipynb_checkpoints
+*.log
+.env
+.vscode/
+.idea/
+*.sqlite
+
+data/
+notebooks/
+
