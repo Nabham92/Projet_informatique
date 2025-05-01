@@ -1,99 +1,108 @@
-# 🎬 Système de Recommandation de Films
+# Système de Recommandation de Films
 
-Ce projet propose une solution complète de **recommandation de films personnalisée** basée sur des données réelles et un modèle de **filtrage collaboratif (SVD)**. Il couvre la collecte de données, la modélisation, une API REST et une interface utilisateur interactive.
-
----
-
-## 🧩 Architecture du projet
-
-L'application est divisée en **3 services Dockerisés** :
-
-- 🗄️ **Base de données DuckDB**  
-  Contient les films et les évaluations utilisateurs (données TMDB + Kaggle).
-- ⚙️ **Backend (FastAPI)**  
-  Fournit une API REST pour générer les recommandations et exposer les films.
-- 🎛️ **Frontend (Streamlit)**  
-  Interface utilisateur pour visualiser les recommandations et explorer les statistiques.
+Ce projet propose une solution complète de **recommandation personnalisée de films** basée sur des données réelles (TMDB + Kaggle) et un modèle de filtrage collaboratif SVD. L'architecture est distribuée via Docker Compose pour un déploiement rapide.
 
 ---
 
-## 🚀 Lancer l'application
+## Fonctionnalités principales
 
-1. **Cloner le projet**
-   ```bash
-   git clone https://github.com/Nabham92/Projet_informatique
-   cd <nom-du-dossier>
-   ```
-
-2. **Lancer avec Docker**
-   ```bash
-   docker-compose up
-   ```
-
-3. **Accéder aux interfaces**
-   - 🔁 API backend : [http://localhost:8000/docs](http://localhost:8000/docs)
-   - 📊 Dashboard : [http://localhost:8501](http://localhost:8501)
-
-> 🕒 L'application peut mettre quelques secondes à démarrer (healthcheck + téléchargement des images).
+- Recommandations personnalisées (filtrage collaboratif SVD)
+- API REST (FastAPI)
+- Dashboard interactif (Streamlit)
+- Base de données locale (DuckDB)
+- Déploiement conteneurisé avec Docker
 
 ---
 
-## 🧠 Fonctionnement du moteur de recommandation
+## Lancer l'application avec Docker
 
-Le système repose sur un modèle SVD (factorisation matricielle) entraîné sur une table user–film–note filtrée.
+### 1. Assurez-vous d’avoir **Docker** et **Docker Compose** installés.
 
-⚠️ Par défaut, seules les notes provenant d’utilisateurs et de films suffisamment actifs sont utilisées pour entraîner le modèle, afin d’assurer la qualité des recommandations.
+### 2. Clonez ce dépôt :
 
-Ces paramètres sont modifiables dans le fichier `common/config.py` :
-
-```python
-MIN_USER_RATINGS = 200   # Nombre minimal de notes par utilisateur
-MIN_FILM_RATINGS = 100   # Nombre minimal de notes par film
+```bash
+git clone https://github.com/Nabham92/Projet_informatique
+cd Projet_informatique
 ```
 
+### 3. Lancez l'application :
+
+```bash
+docker-compose up
+```
+
+Docker va automatiquement :
+
+- Télécharger les images publiées sur Docker Hub
+- Créer le réseau
+- Démarrer le backend et le frontend
+
 ---
 
-## 🧪 Fonctionnalités
+##  Accéder aux interfaces
 
-### Backend (API REST)
+-  **Backend (API)** : [http://localhost:8000/docs](http://localhost:8000/docs)
+-  **Frontend (dashboard Streamlit)** : [http://localhost:8501](http://localhost:8501)
 
-- `GET /movie/{id}` : détails d’un film
-- `POST /recommendations/{user_id}?k=10` : top k recommandations personnalisées
-- `GET /health` : vérification du statut
+ℹ️ Le système vérifie la santé du backend au démarrage. L'interface peut mettre quelques secondes à s'afficher la première fois.
+
+---
+
+##  Images Docker disponibles sur Docker Hub
+
+Pas besoin de build localement. Les images sont déjà publiées :
+
+- **Backend** : `nabham92/projet-final-backend:latest`
+- **Frontend** : `nabham92/projet-final-frontend:latest`
+
+---
+
+##  À propos du moteur de recommandation
+
+Le modèle utilise une factorisation matricielle (SVD) entraînée sur une table filtrée `userId × movieId`.
+
+ Par défaut, le système ne recommande des films qu’aux utilisateurs et pour des films ayant suffisamment de notes.  
+Ces seuils sont configurables dans `common/config.py` :
+
+```python
+MIN_USER_RATINGS = 200  # Min notes par utilisateur
+MIN_FILM_RATINGS = 100  # Min notes par film
+```
+
+Vous pouvez baisser ces valeurs pour élargir les recommandations.
+
+---
+
+## 🧪 Fonctionnalités en détail
+
+### Backend (FastAPI)
+
+- `GET /movie/{id}` → Détails d’un film
+- `POST /recommendations/{user_id}?k=10` → Top k recommandations
+- `GET /health` → Statut du backend
 
 ### Frontend (Streamlit)
 
-- Sélection d’un utilisateur pour obtenir des recommandations
-- Graphiques interactifs :
-  - Distribution des notes
-  - Répartition par genre
-  - Top films par note ou popularité
-  - Activité des utilisateurs
-  - Tendance annuelle
+- Saisie d’un `user_id` pour obtenir ses recommandations
+- Graphiques :
+    - Distribution des notes
+    - Répartition par genre
+    - Évolution annuelle
+    - Activité utilisateurs
+    - Top films par popularité/note
 
 ---
 
-## 🐳 Images Docker utilisées
-
-Les images sont déjà publiées sur Docker Hub :
-
-- `nabham92/projet-final-backend:latest`
-- `nabham92/projet-final-frontend:latest`
-
-Elles sont automatiquement téléchargées lors de l'exécution de `docker-compose up`.
-
----
-
-## 📁 Arborescence simplifiée
+## 📁 Structure simplifiée du projet
 
 ```bash
 .
 ├── app/
-│   ├── backend/       # Code FastAPI
-│   ├── frontend/      # Interface Streamlit
-│   ├── common/        # Config, utils, DB
-│   └── scripts/       # Prétraitement et chargement
-├── data/              # Fichiers CSV / DB
+│   ├── backend/       # Backend FastAPI
+│   ├── frontend/      # Dashboard Streamlit
+│   ├── common/        # Config, base de données
+│   └── scripts/       # Prétraitement, chargement
+├── data/              # Fichiers CSV, DB, modèles
 ├── docker-compose.yml
 ├── dockerfile.backend
 ├── dockerfile.frontend
